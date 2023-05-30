@@ -1,0 +1,7 @@
+__pycache__/
+venv/
+data/
+.idea/
+.streamlit/
+.ipynb_checkpoints
+.DS_Store
