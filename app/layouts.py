@@ -94,7 +94,10 @@ def make_recommender_constraints_layout(data, session_state):
 def make_recommendation_layout(data, session_state):
     movie_id, score, model_name, public_model_name = session_state.get_next_movie_to_review()
     movie = data.get_movie(movie_id)
-    movie_poster = data.get_movie_poster(movie['movie_id'])
+    try:
+        movie_poster = data.get_movie_poster(movie['movie_id'])
+    except FileNotFoundError:
+        movie_poster = None
 
     st.header("Recommendations")
     st.subheader(f"Model: {public_model_name}")
@@ -108,7 +111,10 @@ def make_recommendation_layout(data, session_state):
 
     cols = st.columns([1, 3, 1], gap='small')
     with cols[1]:
-        st.image(movie_poster)
+        if movie_poster:
+            st.image(movie_poster)
+        else:
+            st.write("No movie poster found")
     st.write(movie['plot'])
     with cols[1]:
         st.markdown(f"**Genres**: {movie['genres']}")
