@@ -26,10 +26,16 @@ def app(n_movies_to_rate, n_movies_to_review):
 
     basic_model = BasicModel()
 
-    st.title('Movie Rating App')
+    st.title('Movie Recommender App')
 
     if ss.get_session_stage() == 'user_entry_stage':
-        user_id = st.text_input("Please enter a user id!")
+        st.write('This app generates movie recommendations based on a small set of user-input movies. '
+                 'It does this via movie description embeddings & user-specified constraints.')
+
+        st.write('The app is currently in the testing phase, so multiple recommendations will be provided and you will '
+                 'be asked to rate them.')
+
+        user_id = st.text_input("To get started, please provide a user id!")
         ss.set_user_id(user_id)
         st.button('Submit')
 
@@ -54,6 +60,7 @@ def app(n_movies_to_rate, n_movies_to_review):
 
     else:
         st.header("Thank you for participating!")
+        st.subheader("Feel free to try again with a different movie selection!")
 
 
 if __name__ == '__main__':

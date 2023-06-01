@@ -2,11 +2,13 @@ import streamlit as st
 
 
 def make_selection_layout(data, session_state):
-    st.header("Instructions")
-    st.markdown(
-        f'**Please select {session_state.get_n_movies_to_rate()} movies '
-        f'in order to generate recommendations. '
-        f'({session_state.get_n_liked_movies()} / {session_state.get_n_movies_to_rate()})**')
+    st.header("Movie Rating Instructions")
+    st.write(f"To generate recommendations, please select {session_state.get_n_movies_to_rate()} movies that you "
+             f"enjoyed! The algorithm will work best with similar movies, but you can also try different types of "
+             f"movies to see what happens.")
+    st.write("There are multiple filters below to generate candidate movies, or you can directly search for the "
+             "movie name.")
+    st.markdown(f'**({session_state.get_n_liked_movies()} / {session_state.get_n_movies_to_rate()} selected)**')
 
     st.header("Filters")
     selected_year_start, selected_year_end = st.slider(
@@ -78,7 +80,8 @@ def make_recommender_constraints_layout(data, session_state):
         session_state.set_allowed_recommender_movies(data.get_filtered_movies())
 
     st.header("Recommendations")
-    st.write("Apply additional constraints to the movie recommendations.")
+    st.write("To generate your recommendations, please first provide any additional constraints that you would"
+             "like to apply to your recommendations.")
     selected_year_start, selected_year_end = st.slider(
         'Release Year Range',
         int(min(data.get_all_years())),
@@ -100,7 +103,10 @@ def make_recommendation_layout(data, session_state):
         movie_poster = None
 
     st.header("Recommendations")
-    st.subheader(f"Model: {public_model_name}")
+    st.write("Now it's time to rate the recommendations! Remember, provide the ratings in context of the original"
+             "movies + constraints you selected.")
+    st.markdown(f'**:blue[Model: {public_model_name}]**')
+    # st.subheaer(f"Model: {public_model_name}")
     st.subheader(movie['title'])
 
     # movie metadata section
