@@ -53,9 +53,14 @@ class SessionState:
         return len(st.session_state['user_id']) > 0
 
     @staticmethod
+    def title_select_callback():
+        st.session_state['title_selection'] = ''
+
+    @staticmethod
     def add_liked_movie(movie_id):
         st.session_state['rated_movies'].append(movie_id)
         st.session_state['liked_movies'].append(movie_id)
+        SessionState.title_select_callback()
 
     @staticmethod
     def get_n_liked_movies():
@@ -68,6 +73,7 @@ class SessionState:
     @staticmethod
     def add_rated_movie(movie_id):
         st.session_state['rated_movies'].append(movie_id)
+        SessionState.title_select_callback()
 
     @staticmethod
     def get_n_rated_movies():

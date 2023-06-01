@@ -1,6 +1,5 @@
 import streamlit as st
 
-
 def make_selection_layout(data, session_state):
     st.header("Movie Rating Instructions")
     st.write(f"To generate recommendations, please select {session_state.get_n_movies_to_rate()} movies that you "
@@ -19,7 +18,7 @@ def make_selection_layout(data, session_state):
 
     min_rating = st.slider('Minimum Rating', 0.0, 10.0, 6.0, 0.1)
 
-    selected_title = st.selectbox('Title', data.get_all_titles())
+    selected_title = st.selectbox('Title', data.get_all_titles(), key='title_selection')
     with st.container():
         cols = st.columns(3)
         with cols[0]:
@@ -107,7 +106,6 @@ def make_recommendation_layout(data, session_state):
              "go and watch this movie.")
     st.write("Remember to provide the ratings in the context of the original movies & constraints you selected.")
     st.markdown(f'**:blue[Model: {public_model_name}]**')
-    # st.subheaer(f"Model: {public_model_name}")
     st.subheader(movie['title'])
 
     # movie metadata section

@@ -33,7 +33,8 @@ def app(n_movies_to_rate, n_movies_to_review):
                  'It does this via movie description embeddings & user-specified constraints.')
 
         st.write('The app is currently in the testing phase, so multiple recommendations will be provided and you will '
-                 'be asked to rate them.')
+                 'be asked to rate them. '
+                 'Please click through to the **Thank you for participating** text at the very end!')
 
         user_id = st.text_input("To get started, please provide a user id!")
         ss.set_user_id(user_id)
