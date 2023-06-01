@@ -1,6 +1,7 @@
 __pycache__/
 venv/
 data/
+notebooks/
 .idea/
 .streamlit/
 .ipynb_checkpoints
