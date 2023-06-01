@@ -103,8 +103,9 @@ def make_recommendation_layout(data, session_state):
         movie_poster = None
 
     st.header("Recommendations")
-    st.write("Now it's time to rate the recommendations! Remember, provide the ratings in context of the original"
-             "movies + constraints you selected.")
+    st.write("Now it's time to rate the recommendations! The rating should reflect how likely you would be to actually"
+             "go and watch this movie.")
+    st.write("Remember to provide the ratings in the context of the original movies & constraints you selected.")
     st.markdown(f'**:blue[Model: {public_model_name}]**')
     # st.subheaer(f"Model: {public_model_name}")
     st.subheader(movie['title'])
