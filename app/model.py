@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from fuzzywuzzy.fuzz import token_set_ratio
+import random
 
 
 class Model:
@@ -77,7 +78,10 @@ class BasicModel:
 
     def get_similar_movies(self, data, n, filtered_movies=None, included_movies=None):
         similar_movies = list()
-        for _, movie in data.movies.sort_values('rating', ascending=False).iterrows():
+        candidate_movies = data.movies[['movie_id', 'rating']]
+        candidate_movies['random_seed'] = 1 - np.random.rand(candidate_movies.shape[0])
+        candidate_movies['noisy_rating'] = candidate_movies['rating'] + candidate_movies['random_seed']
+        for _, movie in candidate_movies.sort_values(['noisy_rating'], ascending=False).iterrows():
             if len(similar_movies) == n:
                 break
             if (movie['movie_id'] in filtered_movies) or (movie['movie_id'] not in included_movies):
