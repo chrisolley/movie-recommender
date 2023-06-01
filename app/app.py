@@ -34,11 +34,11 @@ def app(n_movies_to_review):
         st.write('The app is currently in the testing phase, so multiple recommendations will be provided and you will '
                  'be asked to rate them. '
                  'Please click through to the **Thank you for participating** text at the very end!')
-
-        user_id = st.text_input("To get started, please provide a user id, and how many movies you want to rate!")
-        ss.set_user_id(user_id)
+        st.write("To get started, please provide a user id, and how many movies you want to rate!")
         n_movies_to_rate = st.slider('# Movies to Rate', 1, 10, 3, 1)
         ss.set_n_movies_to_rate(n_movies_to_rate)
+        user_id = st.text_input("User ID")
+        ss.set_user_id(user_id)
         st.button('Submit')
 
     elif ss.get_session_stage() == 'movie_rating_stage':
