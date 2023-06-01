@@ -34,7 +34,10 @@ def make_selection_layout(data, session_state):
         st.text("No movie matching these filters!")
     else:
         movie = data.get_random_movie()
-        movie_poster = data.get_movie_poster(movie['movie_id'])
+        try:
+            movie_poster = data.get_movie_poster(movie['movie_id'])
+        except FileNotFoundError:
+            movie_poster = None
 
         st.header(f"Current Selection")
         st.subheader(movie['title'])
@@ -51,7 +54,10 @@ def make_selection_layout(data, session_state):
         # movie poster section
         cols = st.columns([1, 3, 1], gap='small')
         with cols[1]:
-            st.image(movie_poster)
+            if movie_poster:
+                st.image(movie_poster)
+            else:
+                st.write("No movie poster found")
         st.write(movie['plot'])
         # rating section
         cols = st.columns(2, gap='small')
