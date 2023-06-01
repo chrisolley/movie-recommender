@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def make_selection_layout(data, session_state):
     st.header("Movie Rating Instructions")
     st.write(f"To generate recommendations, please select {session_state.get_n_movies_to_rate()} movies that you "
@@ -29,7 +30,7 @@ def make_selection_layout(data, session_state):
             selected_actors = st.multiselect('Starring', data.get_all_actors(), [])
 
     data.filter_movies(selected_year_start, selected_year_end, min_rating, selected_genres,
-                       selected_directors, selected_actors, selected_title, session_state.get_rated_movies())
+                       selected_directors, selected_actors, selected_title, session_state.get_liked_movies())
 
     if data.get_n_filtered_movies() == 0:
         st.text("No movie matching these filters!")

@@ -4,12 +4,11 @@ from data import Data
 from model import Model, BasicModel
 from layouts import make_selection_layout, make_recommendation_layout, make_recommender_constraints_layout
 
-N_MOVIES_TO_RATE = 3
 N_MOVIES_TO_REVIEW = 5
 
 
-def app(n_movies_to_rate, n_movies_to_review):
-    ss = SessionState(n_movies_to_rate)
+def app(n_movies_to_review):
+    ss = SessionState()
 
     data = Data('../data/movie_summary.csv',
                 '../data/movies', ss)
@@ -36,8 +35,10 @@ def app(n_movies_to_rate, n_movies_to_review):
                  'be asked to rate them. '
                  'Please click through to the **Thank you for participating** text at the very end!')
 
-        user_id = st.text_input("To get started, please provide a user id!")
+        user_id = st.text_input("To get started, please provide a user id, and how many movies you want to rate!")
         ss.set_user_id(user_id)
+        n_movies_to_rate = st.slider('# Movies to Rate', 1, 10, 3, 1)
+        ss.set_n_movies_to_rate(n_movies_to_rate)
         st.button('Submit')
 
     elif ss.get_session_stage() == 'movie_rating_stage':
@@ -65,4 +66,4 @@ def app(n_movies_to_rate, n_movies_to_review):
 
 
 if __name__ == '__main__':
-    app(N_MOVIES_TO_RATE, N_MOVIES_TO_REVIEW)
+    app(N_MOVIES_TO_REVIEW)

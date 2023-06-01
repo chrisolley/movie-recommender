@@ -6,12 +6,12 @@ import hashlib
 
 class SessionState:
 
-    def __init__(self, n_movies_to_rate):
+    def __init__(self):
         if not SessionState.is_initialized():
-            self.initialize(n_movies_to_rate)
+            self.initialize()
 
     @staticmethod
-    def initialize(n_movies_to_rate):
+    def initialize():
         st.session_state['user_id'] = ''
         st.session_state['unique_user_id'] = ''
         st.session_state['liked_movies'] = list()
@@ -19,7 +19,7 @@ class SessionState:
         st.session_state['recommender'] = ''
         st.session_state['recommended_movies'] = list()
         st.session_state['n_movies_reviewed'] = 0
-        st.session_state['n_movies_to_rate'] = n_movies_to_rate
+        st.session_state['n_movies_to_rate'] = 0
         st.session_state['n_movies_to_review'] = 0
         st.session_state['added_movies_to_review'] = False
         st.session_state['allowed_recommender_movies'] = list()
@@ -78,6 +78,10 @@ class SessionState:
     @staticmethod
     def get_n_rated_movies():
         return len(st.session_state['rated_movies'])
+
+    @staticmethod
+    def set_n_movies_to_rate(n):
+        st.session_state['n_movies_to_rate'] = n
 
     @staticmethod
     def get_n_movies_to_rate():
