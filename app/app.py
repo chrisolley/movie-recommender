@@ -17,12 +17,12 @@ def app(n_movies_to_rate, n_movies_to_review):
     model_v1 = Model('embeddings_v1',
                      'Recommender 1',
                      '../data/embeddings_v1.npy',
-                     '../data/movie_ids.txt')
+                     '../data/movie_ids.txt', data)
 
     model_v2 = Model('embeddings_v2',
                      'Recommender 2',
                      '../data/embeddings_v2.npy',
-                     '../data/movie_ids.txt')
+                     '../data/movie_ids.txt', data)
 
     basic_model = BasicModel()
 
