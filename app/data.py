@@ -23,16 +23,21 @@ class Data:
     def get_random_movie(self):
         return self.filtered_movies.iloc[int(random.random() * self.filtered_movies.shape[0])].to_dict()
 
-    def filter_movies(self, year_start, year_end, genres, directors, starring, title, excluded_movies):
+    def filter_movies(self, year_start, year_end, min_rating=None, genres=None, directors=None, starring=None,
+                      title=None, excluded_movies=None):
         self.filtered_movies = self.movies[
             (self.movies['release_year'] >= year_start) &
             (self.movies['release_year'] <= year_end) &
-            (len(genres) == 0 or self.movies['genres'].str.contains("|".join(genres))) &
-            (len(directors) == 0 or self.movies['director'].str.contains("|".join(directors))) &
-            (len(starring) == 0 or self.movies['starring'].str.contains("|".join(starring))) &
-            (len(title) == 0 or self.movies['title'] == title) &
-            (~self.movies['movie_id'].isin(excluded_movies))
+            (not min_rating or self.movies['rating'] >= min_rating) &
+            (not genres or self.movies['genres'].str.contains("|".join(genres))) &
+            (not directors or self.movies['director'].str.contains("|".join(directors))) &
+            (not starring or self.movies['starring'].str.contains("|".join(starring))) &
+            (not title or self.movies['title'] == title) &
+            (not excluded_movies or ~self.movies['movie_id'].isin(excluded_movies))
         ]
+
+    def get_filtered_movies(self):
+        return list(self.filtered_movies['movie_id'])
 
     def get_n_filtered_movies(self):
         return len(self.filtered_movies)

@@ -6,7 +6,7 @@ def make_selection_layout(data, session_state):
     st.markdown(
         f'**Please select {session_state.get_n_movies_to_rate()} movies '
         f'in order to generate recommendations. '
-        f'({session_state.get_n_rated_movies()} / {session_state.get_n_movies_to_rate()})**')
+        f'({session_state.get_n_liked_movies()} / {session_state.get_n_movies_to_rate()})**')
 
     st.header("Filters")
     selected_year_start, selected_year_end = st.slider(
@@ -15,7 +15,9 @@ def make_selection_layout(data, session_state):
         int(min(data.get_all_years())),
         (1970, 2023))
 
-    selected_title = st.selectbox('Title', data.get_all_titles(), 0)
+    min_rating = st.slider('Minimum Rating', 0.0, 10.0, 6.0, 0.1)
+
+    selected_title = st.selectbox('Title', data.get_all_titles())
     with st.container():
         cols = st.columns(3)
         with cols[0]:
@@ -25,7 +27,7 @@ def make_selection_layout(data, session_state):
         with cols[2]:
             selected_actors = st.multiselect('Starring', data.get_all_actors(), [])
 
-    data.filter_movies(selected_year_start, selected_year_end, selected_genres,
+    data.filter_movies(selected_year_start, selected_year_end, min_rating, selected_genres,
                        selected_directors, selected_actors, selected_title, session_state.get_rated_movies())
 
     if data.get_n_filtered_movies() == 0:
@@ -64,11 +66,32 @@ def make_selection_layout(data, session_state):
                       use_container_width=True)
 
 
+def make_recommender_constraints_layout(data, session_state):
+    def _submit_constraints(_year_start, _year_end, _min_rating, _genres):
+        data.filter_movies(_year_start, _year_end, _min_rating, _genres)
+        session_state.set_allowed_recommender_movies(data.get_filtered_movies())
+
+    st.header("Recommendations")
+    st.write("Apply additional constraints to the movie recommendations.")
+    selected_year_start, selected_year_end = st.slider(
+        'Release Year Range',
+        int(min(data.get_all_years())),
+        int(min(data.get_all_years())),
+        (1970, 2023), key='rec_constraint_years')
+    min_rating = st.slider('Minimum Rating', 0.0, 10.0, 6.0, 0.1, key='rec_constraint_ratings')
+    selected_genres = st.multiselect('Genres', data.get_all_genres(), [], key='rec_constraint_genres')
+    st.button("Submit",
+              on_click=_submit_constraints,
+              args=(selected_year_start, selected_year_end, min_rating, selected_genres))
+
+
 def make_recommendation_layout(data, session_state):
-    movie_id, score = session_state.get_next_movie_to_review()
+    movie_id, score, model_name, public_model_name = session_state.get_next_movie_to_review()
     movie = data.get_movie(movie_id)
     movie_poster = data.get_movie_poster(movie['movie_id'])
+
     st.header("Recommendations")
+    st.subheader(f"Model: {public_model_name}")
     st.subheader(movie['title'])
 
     # movie metadata section
@@ -89,24 +112,24 @@ def make_recommendation_layout(data, session_state):
         st.button(":green[Sweet!] :100:",
                   use_container_width=True,
                   on_click=session_state.add_movie_rating,
-                  args=(movie['movie_id'], 2, score))
+                  args=(movie['movie_id'], model_name, 2, score))
     with cols[1]:
         st.button(":green[Not bad!] :+1:",
                   use_container_width=True,
                   on_click=session_state.add_movie_rating,
-                  args=(movie['movie_id'], 1, score))
+                  args=(movie['movie_id'], model_name, 1, score))
     with cols[2]:
         st.button("Meh :neutral_face:",
                   use_container_width=True,
                   on_click=session_state.add_movie_rating,
-                  args=(movie['movie_id'], 0, score))
+                  args=(movie['movie_id'], model_name, 0, score))
     with cols[3]:
         st.button(":orange[Not good.] :-1:",
                   use_container_width=True,
                   on_click=session_state.add_movie_rating,
-                  args=(movie['movie_id'], -1, score))
+                  args=(movie['movie_id'], model_name, -1, score))
     with cols[4]:
         st.button(":red[This sucks!] :face_vomiting:",
                   use_container_width=True,
                   on_click=session_state.add_movie_rating,
-                  args=(movie['movie_id'], -2, score))
+                  args=(movie['movie_id'], model_name, -2, score))
