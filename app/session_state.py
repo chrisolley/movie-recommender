@@ -60,6 +60,7 @@ class SessionState:
     def add_liked_movie(movie_id):
         st.session_state['rated_movies'].append(movie_id)
         st.session_state['liked_movies'].append(movie_id)
+        SessionState.save_liked_movie(movie_id)
         SessionState.title_select_callback()
 
     @staticmethod
@@ -166,5 +167,15 @@ class SessionState:
                 '{movie_id.replace("'", "")}',
                 {recommender_score},
                 {rating}
+            );
+        """)
+
+    @staticmethod
+    def save_liked_movie(movie_id):
+        SessionState.execute_query(f"""
+            INSERT INTO Liked VALUES(
+                '{SessionState.get_unique_user_id()}',
+                '{SessionState.get_user_id()}',
+                '{movie_id.replace("'", "")}'
             );
         """)
