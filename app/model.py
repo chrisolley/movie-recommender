@@ -78,7 +78,7 @@ class BasicModel:
 
     def get_similar_movies(self, data, n, filtered_movies=None, included_movies=None):
         similar_movies = list()
-        candidate_movies = data.movies[['movie_id', 'rating']]
+        candidate_movies = data.movies[['movie_id', 'rating']].copy()
         candidate_movies['random_seed'] = 1 - np.random.rand(candidate_movies.shape[0])
         candidate_movies['noisy_rating'] = candidate_movies['rating'] + candidate_movies['random_seed']
         for _, movie in candidate_movies.sort_values(['noisy_rating'], ascending=False).iterrows():
