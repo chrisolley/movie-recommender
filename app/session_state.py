@@ -14,6 +14,7 @@ class SessionState:
     def initialize():
         st.session_state['user_id'] = ''
         st.session_state['unique_user_id'] = ''
+        st.session_state['session_timestamp'] = int(time.time())
         st.session_state['liked_movies'] = list()
         st.session_state['rated_movies'] = list()
         st.session_state['recommender'] = ''
@@ -42,6 +43,10 @@ class SessionState:
     @staticmethod
     def get_unique_user_id():
         return st.session_state['unique_user_id']
+
+    @staticmethod
+    def get_session_timestamp():
+        return st.session_state['session_timestamp']
 
     @staticmethod
     def set_user_id(user_id):
@@ -166,7 +171,8 @@ class SessionState:
                 '{recommender}',
                 '{movie_id.replace("'", "")}',
                 {recommender_score},
-                {rating}
+                {rating},
+                {SessionState.get_session_timestamp()}
             );
         """)
 
@@ -176,6 +182,7 @@ class SessionState:
             INSERT INTO Liked VALUES(
                 '{SessionState.get_unique_user_id()}',
                 '{SessionState.get_user_id()}',
-                '{movie_id.replace("'", "")}'
+                '{movie_id.replace("'", "")}',
+                {SessionState.get_session_timestamp()}
             );
         """)
